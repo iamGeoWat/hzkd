@@ -1,5 +1,5 @@
 const https = require('https')
-const querystring = require('querystring')
+// const querystring = require('querystring')
 // const md5 = require('./md5')
 const CryptoJS = require('crypto-js')
 const api_key = 'caf58f2d-a046-4887-93ec-84989c0dc746'
@@ -76,7 +76,7 @@ var engine = setInterval(() => {
   timestamp.setHours(timestamp.getHours(), timestamp.getMinutes());
   // var positionSign = md5('api_key=' + api_key + '&contract_type=quarter&symbol=eos_usd&type=1' + '&secret_key=' + sec_key).toUpperCase()
   var positionSign = CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256(timestamp.toISOString() + 'GET' + '/api/futures/v3/position', sec_key))
-  console.log(timestamp.toISOString())
+  // console.log(timestamp.toISOString())
   const positionInfoOpt = {
     host: 'www.okex.com',
     path: '/api/futures/v3/position',
