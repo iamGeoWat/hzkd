@@ -1,0 +1,14 @@
+{
+  "name": "hzkd_ali",
+  "version": "1.0.0",
+  "description": "domestic server for huangzhuangkaidan",
+  "main": "hzkd_ali.js",
+  "scripts": {
+    "test": "ndoe huangzhuangkaidan.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
