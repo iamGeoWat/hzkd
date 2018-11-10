@@ -12,7 +12,11 @@
     "backgroundColor": "#F6F6F6",
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#F6F6F6",
-    "navigationBarTitleText": "云开发 QuickStart",
+    "navigationBarTitleText": "黄庄开单",
     "navigationBarTextStyle": "black"
+  },
+  "usingComponents": {
+    "i-card": "./iView/card/index",
+    "i-panel": "./iView/panel/index"
   }
 }

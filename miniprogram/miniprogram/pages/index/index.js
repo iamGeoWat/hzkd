@@ -8,38 +8,7 @@ Page({
     logged: false,
     takeSession: false,
     requestResult: '',
-    infoContainer: {
-      userInfo:
-        {
-          totalEOS: '',
-          profitLoss: '',
-          open: '',
-          openProfit: ''
-        },
-      positionInfo:
-        {
-          shortInfo:
-            {
-              openPrice: '',
-              profitLossRatio: '',
-              profitLoss: '',
-              holding: '',
-              available: '',
-              margin: '',
-              deadPrice: ''
-            },
-          longInfo:
-            {
-              openPrice: '',
-              profitLossRatio: '',
-              profitLoss: '',
-              holding: '',
-              available: '',
-              margin: '',
-              deadPrice: ''
-            }
-        }
-    }
+    infoContainer: []
   },
 
   onLoad: function() {
@@ -51,112 +20,48 @@ Page({
     }
 
     // 获取用户信息
-    wx.getSetting({
-      success: res => {
-        if (res.authSetting['scope.userInfo']) {
-          // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-          wx.getUserInfo({
-            success: res => {
-              this.setData({
-                avatarUrl: res.userInfo.avatarUrl,
-                userInfo: res.userInfo
-              })
-            }
-          })
-        }
-      }
-    })
+    // wx.getSetting({
+    //   success: res => {
+    //     if (res.authSetting['scope.userInfo']) {
+    //       // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
+    //       wx.getUserInfo({
+    //         success: res => {
+    //           this.setData({
+    //             avatarUrl: res.userInfo.avatarUrl,
+    //             userInfo: res.userInfo
+    //           })
+    //         }
+    //       })
+    //     }
+    //   }
+    // })
   },
 
-  onGetUserInfo: function(e) {
-    if (!this.logged && e.detail.userInfo) {
-      this.setData({
-        logged: true,
-        avatarUrl: e.detail.userInfo.avatarUrl,
-        userInfo: e.detail.userInfo
-      })
-    }
-  },
-
-  onGetOpenid: function() {
-    // 调用云函数
-    wx.cloud.callFunction({
-      name: 'login',
-      data: {},
-      success: res => {
-        console.log('[云函数] [login] user openid: ', res.result.openid)
-        app.globalData.openid = res.result.openid
-        wx.navigateTo({
-          url: '../userConsole/userConsole',
-        })
-      },
-      fail: err => {
-        console.error('[云函数] [login] 调用失败', err)
-        wx.navigateTo({
-          url: '../deployFunctions/deployFunctions',
-        })
-      }
-    })
-  },
-
-  // 上传图片
-  doUpload: function () {
-    // 选择图片
-    wx.chooseImage({
-      count: 1,
-      sizeType: ['compressed'],
-      sourceType: ['album', 'camera'],
-      success: function (res) {
-
-        wx.showLoading({
-          title: '上传中',
-        })
-
-        const filePath = res.tempFilePaths[0]
-        
-        // 上传图片
-        const cloudPath = 'my-image' + filePath.match(/\.[^.]+?$/)[0]
-        wx.cloud.uploadFile({
-          cloudPath,
-          filePath,
-          success: res => {
-            console.log('[上传文件] 成功：', res)
-
-            app.globalData.fileID = res.fileID
-            app.globalData.cloudPath = cloudPath
-            app.globalData.imagePath = filePath
-            
-            wx.navigateTo({
-              url: '../storageConsole/storageConsole'
-            })
-          },
-          fail: e => {
-            console.error('[上传文件] 失败：', e)
-            wx.showToast({
-              icon: 'none',
-              title: '上传失败',
-            })
-          },
-          complete: () => {
-            wx.hideLoading()
-          }
-        })
-
-      },
-      fail: e => {
-        console.error(e)
-      }
-    })
-  },
-
-  testAPI: function() {
+  getContractInfo: function() {
     wx.cloud.callFunction({
       name: 'grabInfo',
       data: {},
       success: res => {
         console.log(JSON.parse(res.result))
+        var modifiedResult = JSON.parse(res.result)
+        for (var i = 0; i < modifiedResult.length; i++) {
+          var tokenName = modifiedResult[i].instrument_id.substr(0,3)
+          var contractType = modifiedResult[i].instrument_id.substr(8, 6)
+          modifiedResult[i].instrument_id = { 'token': tokenName, 'type': contractType}
+        }
+        for (var i = 0; i < modifiedResult.length; i++) {
+          var short_pnl = modifiedResult[i].short_margin * modifiedResult[i].short_pnl_ratio
+          var short_pnl_ratio_percent = (Math.round(modifiedResult[i].short_pnl_ratio * 10000)/100).toFixed(2) + '%'
+          modifiedResult[i].short_pnl_ratio = { 'short_pnl': short_pnl, 'short_pnl_ratio': modifiedResult[i].short_pnl_ratio, 'short_pnl_ratio_percent': short_pnl_ratio_percent }
+        }
+        for (var i = 0; i < modifiedResult.length; i++) {
+          var long_pnl = modifiedResult[i].long_margin * modifiedResult[i].long_pnl_ratio
+          var long_pnl_ratio_percent = (Math.round(modifiedResult[i].long_pnl_ratio * 10000) / 100).toFixed(2) + '%'
+          modifiedResult[i].long_pnl_ratio = {
+            'long_pnl': long_pnl, 'long_pnl_ratio': modifiedResult[i].long_pnl_ratio, 'long_pnl_ratio_percent': long_pnl_ratio_percent }
+        }
         this.setData({
-          infoContainer: JSON.parse(res.result)
+          infoContainer: modifiedResult
         })
       },
       fail: e => {
@@ -168,8 +73,8 @@ Page({
   windIt: function() {
     var that = this
     setInterval(function(){
-      that.testAPI()
-    }, 5000)
+      that.getContractInfo()
+    }, 3000)
   }
 
 })
