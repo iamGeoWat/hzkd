@@ -1,13 +1,15 @@
 const https = require('https')
 const CryptoJS = require('crypto-js')
 
-// const api_key = 'e0bdc317-88de-4fea-8bc4-e899db1f90f6'
-// const sec_key = '4655CA50BB11AFCD67AD5E70252C644E'
-// const passphrase = ''
+// const api_key = 'caf58f2d-a046-4887-93ec-84989c0dc746'
+// const sec_key = '875CB6AD307FACF031D0CA1C0ACFAD1E'
+// const passphrase = '123456'
+// GeoWat
 
-const api_key = 'caf58f2d-a046-4887-93ec-84989c0dc746'
-const sec_key = '875CB6AD307FACF031D0CA1C0ACFAD1E'
-const passphrase = '123456'
+const api_key = '1992c0f0-c4d2-43b4-ac8f-23a1571ce12c'
+const sec_key = '4D1B1E726EC0CAD7ADBB77D00D629961'
+const passphrase = '515162'
+// Yu
 
 const express = require('express')
 const app = express()

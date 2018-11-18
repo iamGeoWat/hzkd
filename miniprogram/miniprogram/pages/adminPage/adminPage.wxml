@@ -1,0 +1,90 @@
+<view>
+  <i-spin custom wx:if="{{ !isLoaded }}">
+    <view class='loadingView'></view>
+    <view>获取开单信息</view>
+  </i-spin>
+  <i-tab-bar current="{{ currentTab }}" bindchange="changeTab">
+    <i-tab-bar-item key="watch" icon="createtask" current-icon="createtask_fill" title="看单"></i-tab-bar-item>
+    <i-tab-bar-item key="admin" icon="addressbook" current-icon="addressbook_fill" title="管理"></i-tab-bar-item>
+</i-tab-bar>
+
+  <!-- 展示单子 -->
+  <block wx:for="{{infoContainer}}" wx:for-item="position" wx:key="{{position.instrument_id.token}}" wx:if="{{ currentTab === 'watch' }}">
+    <i-panel hide-border="false" title="{{position.instrument_id.token}}">
+    <view style='margin-top: 5px; margin-bottom: 5px' wx:if="{{position.short_qty >= 1}}">
+      <i-card title='空头{{position.short_leverage}}X' extra='{{position.instrument_id.token}} {{position.instrument_id.type}}'>
+      <view slot='content'>
+        <view>
+          <text>开仓价格{{position.short_avg_cost}}</text>
+          <text style='margin-left: 30%'>收益率{{position.short_pnl_ratio.short_pnl_ratio_percent}}</text>
+        </view>
+      </view>
+      <view slot='footer'>
+        <view>
+          <text>收益 {{position.short_pnl_ratio.short_pnl}}</text>
+        </view>
+        <view>
+          <text>持仓量 {{position.short_qty}}</text>
+        </view>
+        <view>
+          <text>可平仓量 {{position.short_avail_qty}}</text>
+        </view>
+        <view>
+          <text>保证金 {{position.short_margin}}</text>
+        </view>
+        <view>
+          <text>预估爆仓价 {{position.short_liqui_price}}</text>
+        </view>
+      </view>
+      </i-card>
+    </view>
+
+    <view style='margin-top: 5px; margin-bottom: 5px' wx:if="{{position.long_qty >= 1}}">
+      <i-card title='多头{{position.long_leverage}}X' extra='{{position.instrument_id.token}} {{position.instrument_id.type}}'>
+      <view slot='content'>
+        <view>
+          <text>开仓价格{{position.long_avg_cost}}</text>
+          <text style='margin-left: 30%'>收益率{{position.long_pnl_ratio.long_pnl_ratio_percent}}</text>
+        </view>
+      </view>
+      <view slot='footer'>
+        <view>
+          <text>收益 {{position.long_pnl_ratio.long_pnl}}</text>
+        </view>
+        <view>
+          <text>持仓量 {{position.long_qty}}</text>
+        </view>
+        <view>
+          <text>可平仓量 {{position.long_avail_qty}}</text>
+        </view>
+        <view>
+          <text>保证金 {{position.long_margin}}</text>
+        </view>
+        <view>
+          <text>预估爆仓价 {{position.long_liqui_price}}</text>
+        </view>
+      </view>
+      </i-card>
+    </view>
+    </i-panel>
+  </block>
+
+  <view wx:if="{{ currentTab === 'admin' }}">
+  <i-button bind:click="refreshData">刷新</i-button>
+  <block wx:for="{{ adminData }}" wx:for-item="apply" wx:key="apply._id">
+    <i-card full title="微信名：{{ apply.name }}" extra="开通申请" class="adminCard">
+      <view slot="content">
+        <text>
+          要看的操盘手: {{ apply.operatorid }} \n
+          理由: {{ apply.reason }} \n
+          openid: {{ apply.openid }}
+        </text>
+      </view>
+      <view slot="footer">
+        <i-button bind:click="handlePass" data-id='{{apply._id}}' data-name='{{apply.name}}' data-openid='{{apply.openid}}' data-operatorid='{{apply.operatorid}}' inline size='small' type="success">同意</i-button>
+        <i-button bind:click="handleReject" data-id='{{apply._id}}' inline size='small'>拒绝</i-button>
+      </view>
+    </i-card>
+  </block>
+  </view>
+</view>

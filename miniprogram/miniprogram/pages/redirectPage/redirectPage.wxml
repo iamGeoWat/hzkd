@@ -1,0 +1,9 @@
+<!--pages/redirectPage/redirectPage.wxml-->
+<i-card class='loadingCard' title="你的id：{{ openid }}">
+  <view slot="content">
+    <i-spin custom>
+        <view class='loadingView'></view>
+        <view>正在检测权限信息</view>
+    </i-spin>
+  </view>
+</i-card>

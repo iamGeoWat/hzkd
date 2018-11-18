@@ -1,0 +1,18 @@
+<!--pages/touristPage/touristPage.wxml-->
+<view class='hintText' wx:if="{{ isApplying && !hasHandled }}">
+  <text>您的申请正在审核，请等待管理员处理</text>
+</view>
+
+<view wx:if="{{ !isApplying }}">
+  <i-panel title="申请表">
+    <i-input bind:change="onChangeForm" data-what='openid' value="{{ openid }}" title="openid" disabled />
+    <i-input bind:change="onChangeForm" data-what='wechatName' value="{{ wechatName }}" type="text" autofocus title="微信名" />
+    <i-input bind:change="onChangeForm" data-what='operatorid' value="{{ operatorid }}" type='number' title="想关注人的id" />
+    <i-input bind:change="onChangeForm" data-what='reason' value="{{reason}}" type="textarea" title="理由/何处得知" placeholder="想办法让狗管理知道你是谁" maxlength="50" />
+    <i-button bind:click="handleSubmit" type="success" long="true">提交</i-button>
+  </i-panel>
+</view>
+
+<view class='hintText' wx:if="{{ isApplying && hasHandled }}">
+  <text>未通过审核。\n 拒绝的管理员是 {{ handleAdminName }}，理由是{{ handleAdminComment }}。</text>
+</view>

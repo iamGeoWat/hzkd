@@ -1,0 +1,13 @@
+/* pages/touristPage/touristPage.wxss */
+.hintText {
+  color: #2d8cf0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+page {
+  height: 100%;
+}
