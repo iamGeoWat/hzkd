@@ -35,7 +35,6 @@ Page({
           openid: res.result.openid
         })
         console.log(res.result)
-        setTimeout(function () {
           that.getUserType(res.result.openid).then(function(res) {
             if (res === 'admin') {
               wx.redirectTo({
@@ -55,7 +54,6 @@ Page({
               })
             }
           })
-        }, 1000)
       }
     })
   },
