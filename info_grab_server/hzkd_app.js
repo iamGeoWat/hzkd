@@ -11,7 +11,7 @@ const CryptoJS = require('crypto-js')
 // const passphrase = '515162'
 // Yu
 
-const api_key = '3414ef69-78c3-4c8d-a723-86e0fd51c02b\n'
+const api_key = '3414ef69-78c3-4c8d-a723-86e0fd51c02b'
 const sec_key = 'D7034EC4A3F7290CBE77D0269231699F'
 const passphrase = '1993612dj'
 // Huang
