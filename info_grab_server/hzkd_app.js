@@ -6,10 +6,15 @@ const CryptoJS = require('crypto-js')
 // const passphrase = '123456'
 // GeoWat
 
-const api_key = '1992c0f0-c4d2-43b4-ac8f-23a1571ce12c'
-const sec_key = '4D1B1E726EC0CAD7ADBB77D00D629961'
-const passphrase = '515162'
+// const api_key = '1992c0f0-c4d2-43b4-ac8f-23a1571ce12c'
+// const sec_key = '4D1B1E726EC0CAD7ADBB77D00D629961'
+// const passphrase = '515162'
 // Yu
+
+const api_key = '3414ef69-78c3-4c8d-a723-86e0fd51c02b\n'
+const sec_key = 'D7034EC4A3F7290CBE77D0269231699F'
+const passphrase = '1993612dj'
+// Huang
 
 const express = require('express')
 const app = express()

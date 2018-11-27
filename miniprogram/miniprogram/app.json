@@ -9,7 +9,7 @@
     "backgroundColor": "#F6F6F6",
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#F6F6F6",
-    "navigationBarTitleText": "黄庄开单",
+    "navigationBarTitleText": "黄庄报单",
     "navigationBarTextStyle": "black"
   },
   "usingComponents": {

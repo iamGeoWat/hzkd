@@ -1,0 +1,25 @@
+{
+  "pages": [
+    "pages/redirectPage/redirectPage",     
+    "pages/adminPage/adminPage",
+    "pages/touristPage/touristPage",
+    "pages/userPage/userPage"
+  ],
+  "window": {
+    "backgroundColor": "#F6F6F6",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#F6F6F6",
+    "navigationBarTitleText": "PomeloClub",
+    "navigationBarTextStyle": "black"
+  },
+  "usingComponents": {
+    "i-card": "./iView/card/index",
+    "i-panel": "./iView/panel/index",
+    "i-spin": "./iView/spin/index",
+    "i-icon": "./iView/icon/index",
+    "i-tab-bar": "./iView/tab-bar/index",
+    "i-tab-bar-item": "./iView/tab-bar-item/index",
+    "i-input": "./iView/input/index",
+    "i-button": "./iView/button/index"
+  }
+}
