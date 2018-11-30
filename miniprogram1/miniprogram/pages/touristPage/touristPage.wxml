@@ -1,19 +1,19 @@
 <!--pages/touristPage/touristPage.wxml-->
 <view class='hintText' wx:if="{{ isApplying && !hasHandled }}">
-  <text>您的申请正在审核，请等待管理员处理</text>
+  <text>提交成功，请等待Club成员处理</text>
   <text>如果您是腾讯审核人员，请等待约1分钟，彻底关闭小程序后再打开，再次检测权限后即可进入功能页面。感谢您的耐心。</text>
 </view>
 
 <view wx:if="{{ !isApplying }}">
-  <i-panel title="申请表（腾讯测试人员直接提交即可）">
+  <i-panel title="申请表（腾讯测试人员请直接提交）">
     <i-input bind:change="onChangeForm" data-what='openid' value="{{ openid }}" title="openid" disabled />
-    <i-input bind:change="onChangeForm" data-what='wechatName' value="{{ wechatName }}" type="text" autofocus title="微信名" />
-    <i-input bind:change="onChangeForm" data-what='operatorid' value="{{ operatorid }}" type='number' title="想关注人的id" />
-    <i-input bind:change="onChangeForm" data-what='reason' value="{{reason}}" type="textarea" title="理由/何处得知" placeholder="想办法让管理知道您是谁" maxlength="50" />
+    <i-input bind:change="onChangeForm" data-what='wechatName' value="{{ wechatName }}" type="text" autofocus title="Club内昵称" />
+    <i-input bind:change="onChangeForm" data-what='operatorid' value="{{ operatorid }}" type='number' title="Club Code" />
+    <i-input bind:change="onChangeForm" data-what='reason' value="{{reason}}" type="textarea" title="自我介绍" placeholder="让管理知道您是谁" maxlength="50" />
     <i-button bind:click="handleSubmit" type="success" long="true">提交</i-button>
   </i-panel>
 </view>
 
 <view class='hintText' wx:if="{{ isApplying && hasHandled }}">
-  <text>未通过审核。\n 拒绝的管理员是 {{ handleAdminName }}，理由是{{ handleAdminComment }}。</text>
+  <text>未通过。\n 拒绝的管理员是 {{ handleAdminName }}，理由是{{ handleAdminComment }}。</text>
 </view>

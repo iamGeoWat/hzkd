@@ -90,7 +90,10 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-
+    return {
+      imageUrl: '/images/logo.png',
+      path: '/pages/redirectPage/redirectPage'
+    }
   },
 
   getUserType: function (in_openid) {

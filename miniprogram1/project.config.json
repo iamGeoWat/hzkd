@@ -9,7 +9,7 @@
 		"newFeature": true
 	},
 	"appid": "wx61691bf1c7e84d1f",
-	"projectname": "HZKD1",
+	"projectname": "PomeloClub",
 	"libVersion": "2.2.5",
 	"condition": {
 		"search": {
@@ -31,9 +31,7 @@
 			"current": 0,
 			"list": [
 				{
-					"id": -1,
-					"name": "db guide",
-					"pathName": "pages/databaseGuide/databaseGuide"
+
 				}
 			]
 		}

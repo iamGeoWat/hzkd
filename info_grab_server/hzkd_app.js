@@ -19,9 +19,9 @@ const passphrase = '1993612dj'
 const express = require('express')
 const app = express()
 
-var infoContainer = []
+var infoContainer = [{}, {}]
 
-var engine = setInterval(() => {
+var positionEngine = setInterval(() => {
   var timestamp = new Date();
   timestamp.setHours(timestamp.getHours(), timestamp.getMinutes());
   var positionSign = CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256(timestamp.toISOString() + 'GET' + '/api/futures/v3/position', sec_key))
@@ -48,7 +48,7 @@ var engine = setInterval(() => {
     res.on('end', () => {
       console.log(JSON.parse(Buffer.concat(dataArr, dataArrLen).toString()))
       if (JSON.parse(Buffer.concat(dataArr, dataArrLen).toString()).holding !== undefined) {
-        infoContainer = JSON.parse(Buffer.concat(dataArr, dataArrLen).toString()).holding[0]
+        infoContainer[0] = JSON.parse(Buffer.concat(dataArr, dataArrLen).toString()).holding[0]
       }
     })
   })
@@ -58,8 +58,44 @@ var engine = setInterval(() => {
   positionInfoGrabber.end()
 }, 5000)
 
+var accountEngine = setInterval(() => {
+  var timestamp = new Date();
+  timestamp.setHours(timestamp.getHours(), timestamp.getMinutes());
+  var accountSign = CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256(timestamp.toISOString() + 'GET' + '/api/futures/v3/accounts', sec_key))
+  const accountInfoOpt = {
+    host: 'www.okex.com',
+    path: '/api/futures/v3/accounts',
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'OK-ACCESS-KEY': api_key,
+      'OK-ACCESS-SIGN': accountSign,
+      'OK-ACCESS-PASSPHRASE': passphrase,
+      'OK-ACCESS-TIMESTAMP': timestamp.toISOString()
+    }
+  }
+  
+  const accountInfoGrabber = https.request(accountInfoOpt, (res) => {
+    var dataArr = []
+    var dataArrLen = 0
+    res.on('data', (d) => {
+      dataArr.push(d)
+      dataArrLen += d.length
+    })
+    res.on('end', () => {
+      if (JSON.parse(Buffer.concat(dataArr, dataArrLen).toString()).info) {
+        infoContainer[1] = JSON.parse(Buffer.concat(dataArr, dataArrLen).toString()).info
+      }
+    })
+  })
+  accountInfoGrabber.on('error', (e) => {
+    console.error(e);
+  });
+  accountInfoGrabber.end()
+}, 10000)
+
 var seeThruEngine = setInterval(() => {
-  // console.log(infoContainer)
+  console.log(infoContainer)
 }, 5000)
 
 app.get('/info', (req, res) => res.send(JSON.stringify(infoContainer)))

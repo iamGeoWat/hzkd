@@ -8,7 +8,7 @@ Page({
     logged: false,
     takeSession: false,
     requestResult: '',
-    infoContainer: [],
+    infoContainer: [{}, {}],
     currentTab: "watch",
     isLoaded: false,
     adminData: []
@@ -60,7 +60,7 @@ Page({
     that.openDataTunnel()
     setInterval(function() {
       that.refreshData()
-    }, 1000)
+    }, 5000)
   },
 
   /**
@@ -95,7 +95,10 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-
+    return {
+      imageUrl: '/images/logo.png',
+      path: '/pages/redirectPage/redirectPage'
+    }
   },
 
   getContractInfo: function () {
@@ -109,6 +112,10 @@ Page({
           for (var i = 0; i < modifiedResult.length; i++) {
             var tokenName = modifiedResult[i].instrument_id.substr(0, 3)
             var contractType = modifiedResult[i].instrument_id.substr(8, 6)
+            //to be fixed
+            if (tokenName === "EOS") {
+              tokenName = "Pomelo"
+            }
             modifiedResult[i].instrument_id = { 'token': tokenName, 'type': contractType }
           }
           for (var i = 0; i < modifiedResult.length; i++) {
@@ -124,7 +131,7 @@ Page({
             }
           }
           this.setData({
-            infoContainer: modifiedResult
+            infoContainer: [modifiedResult, this.data.infoContainer[1]]
           })
         }
         
@@ -141,10 +148,11 @@ Page({
       that.setData({
         isLoaded: true
       })
-    }, 3000)
+    }, 1000)
+    that.getContractInfo()
     setInterval(function () {
       that.getContractInfo()
-    }, 3000)
+    }, 12000)
   },
 
   changeTab: function ({ detail }) {

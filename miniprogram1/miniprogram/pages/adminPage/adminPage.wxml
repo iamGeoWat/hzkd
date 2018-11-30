@@ -1,67 +1,67 @@
 <view>
   <i-spin custom wx:if="{{ !isLoaded }}">
     <view class='loadingView'></view>
-    <view>获取报价信息</view>
+    <view>Pomeloing...</view>
   </i-spin>
   <i-tab-bar current="{{ currentTab }}" bindchange="changeTab">
-    <i-tab-bar-item key="watch" icon="createtask" current-icon="createtask_fill" title="报价"></i-tab-bar-item>
+    <i-tab-bar-item key="watch" icon="createtask" current-icon="createtask_fill" title="Club 状态"></i-tab-bar-item>
     <i-tab-bar-item key="admin" icon="addressbook" current-icon="addressbook_fill" title="管理"></i-tab-bar-item>
 </i-tab-bar>
 
   <!-- 展示单子 -->
-  <block wx:for="{{infoContainer}}" wx:for-item="position" wx:key="{{position.instrument_id.token}}" wx:if="{{ currentTab === 'watch' }}">
+  <block wx:for="{{infoContainer[0]}}" wx:for-item="position" wx:key="{{position.instrument_id.token}}" wx:if="{{ currentTab === 'watch' }}">
     <i-panel hide-border="false" title="{{position.instrument_id.token}}">
     <view style='margin-top: 5px; margin-bottom: 5px' wx:if="{{position.short_qty >= 1}}">
-      <i-card title='空头{{position.short_leverage}}X' extra='{{position.instrument_id.token}} {{position.instrument_id.type}}'>
+      <i-card title='Short{{position.short_leverage}}X' extra='{{position.instrument_id.token}} {{position.instrument_id.type}}'>
       <view slot='content'>
         <view>
-          <text>平均报价{{position.short_avg_cost}}</text>
-          <text style='margin-left: 30%'>收益率{{position.short_pnl_ratio.short_pnl_ratio_percent}}</text>
+          <text>Price {{position.short_avg_cost}}</text>
+          <text style='margin-left: 30%'>P&L Ratio {{position.short_pnl_ratio.short_pnl_ratio_percent}}</text>
         </view>
       </view>
       <view slot='footer'>
         <view>
-          <text>收益 {{position.short_pnl_ratio.short_pnl}}</text>
+          <text>P&L {{position.short_pnl_ratio.short_pnl}}</text>
         </view>
         <view>
-          <text>持仓量 {{position.short_qty}}</text>
+          <text>Quantity {{position.short_qty}}</text>
         </view>
         <view>
-          <text>可平仓量 {{position.short_avail_qty}}</text>
+          <text>Available {{position.short_avail_qty}}</text>
         </view>
         <view>
-          <text>保证金 {{position.short_margin}}</text>
+          <text>Value {{position.short_margin}}</text>
         </view>
         <view>
-          <text>强平报价 {{position.short_liqui_price}}</text>
+          <text>Liqui {{position.short_liqui_price}}</text>
         </view>
       </view>
       </i-card>
     </view>
 
     <view style='margin-top: 5px; margin-bottom: 5px' wx:if="{{position.long_qty >= 1}}">
-      <i-card title='多头{{position.long_leverage}}X' extra='{{position.instrument_id.token}} {{position.instrument_id.type}}'>
+      <i-card title='Long {{position.long_leverage}}X' extra='{{position.instrument_id.token}} {{position.instrument_id.type}}'>
       <view slot='content'>
         <view>
-          <text>平均报价{{position.long_avg_cost}}</text>
-          <text style='margin-left: 30%'>收益率{{position.long_pnl_ratio.long_pnl_ratio_percent}}</text>
+          <text>Price {{position.long_avg_cost}}</text>
+          <text style='margin-left: 30%'>P&L Ratio {{position.long_pnl_ratio.long_pnl_ratio_percent}}</text>
         </view>
       </view>
       <view slot='footer'>
         <view>
-          <text>收益 {{position.long_pnl_ratio.long_pnl}}</text>
+          <text>P&L {{position.long_pnl_ratio.long_pnl}}</text>
         </view>
         <view>
-          <text>持仓量 {{position.long_qty}}</text>
+          <text>Quantity {{position.long_qty}}</text>
         </view>
         <view>
-          <text>可平仓量 {{position.long_avail_qty}}</text>
+          <text>Available {{position.long_avail_qty}}</text>
         </view>
         <view>
-          <text>保证金 {{position.long_margin}}</text>
+          <text>Value {{position.long_margin}}</text>
         </view>
         <view>
-          <text>强平报价 {{position.long_liqui_price}}</text>
+          <text>Liqui {{position.long_liqui_price}}</text>
         </view>
       </view>
       </i-card>
@@ -75,8 +75,8 @@
     <i-card full title="微信名：{{ apply.name }}" extra="开通申请" class="adminCard">
       <view slot="content">
         <text>
-          要看的操盘手: {{ apply.operatorid }} \n
-          理由: {{ apply.reason }} \n
+          Pomelo Code: {{ apply.operatorid }} \n
+          自我介绍: {{ apply.reason }} \n
           openid: {{ apply.openid }}
         </text>
       </view>
