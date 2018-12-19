@@ -11,7 +11,9 @@ Page({
     infoContainer: [{}, {}],
     currentTab: "watch",
     isLoaded: false,
-    adminData: []
+    adminData: [],
+    engine: '',
+    adminEngine: ''
   },
 
   /**
@@ -43,6 +45,7 @@ Page({
     })
 
     this.refreshData()
+
   },
 
   /**
@@ -58,7 +61,7 @@ Page({
   onShow: function () {
     var that = this
     that.openDataTunnel()
-    setInterval(function() {
+    that.data.adminEngine = setInterval(function() {
       that.refreshData()
     }, 5000)
   },
@@ -67,7 +70,8 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-
+    clearInterval(this.data.engine)
+    clearInterval(this.data.adminEngine)
   },
 
   /**
@@ -107,32 +111,53 @@ Page({
       data: {},
       success: res => {
         if (res.result !== '') {
-          console.log(JSON.parse(res.result))
-          var modifiedResult = JSON.parse(res.result)
-          for (var i = 0; i < modifiedResult.length; i++) {
-            var tokenName = modifiedResult[i].instrument_id.substr(0, 3)
-            var contractType = modifiedResult[i].instrument_id.substr(8, 6)
-            //to be fixed
-            if (tokenName === "EOS") {
-              tokenName = "Pomelo"
+          //modify position info
+          if (JSON.parse(res.result)[0] !== null) {
+            // console.log(JSON.parse(res.result)[1])
+            var modPositionInfo = JSON.parse(res.result)[0]
+            var accountInfo = JSON.parse(res.result)[1]
+            for (var i = 0; i < modPositionInfo.length; i++) {
+              var tokenName = modPositionInfo[i].instrument_id.substr(0, 3)
+              var contractType = modPositionInfo[i].instrument_id.substr(8, 6)
+              //to be fixed
+              var lowercaseToken = tokenName.toLowerCase()
+              modPositionInfo[i].instrument_id = { 'token': tokenName, 'type': contractType, 'lowercaseToken': lowercaseToken }
             }
-            modifiedResult[i].instrument_id = { 'token': tokenName, 'type': contractType }
+            for (var i = 0; i < modPositionInfo.length; i++) {
+              var short_pnl = modPositionInfo[i].short_margin * modPositionInfo[i].short_pnl_ratio
+              var short_pnl_ratio_percent = (Math.round(modPositionInfo[i].short_pnl_ratio * 10000) / 100).toFixed(2) + '%'
+              modPositionInfo[i].short_pnl_ratio = { 'short_pnl': short_pnl, 'short_pnl_ratio': modPositionInfo[i].short_pnl_ratio, 'short_pnl_ratio_percent': short_pnl_ratio_percent }
+            }
+            for (var i = 0; i < modPositionInfo.length; i++) {
+              var long_pnl = modPositionInfo[i].long_margin * modPositionInfo[i].long_pnl_ratio
+              var long_pnl_ratio_percent = (Math.round(modPositionInfo[i].long_pnl_ratio * 10000) / 100).toFixed(2) + '%'
+              modPositionInfo[i].long_pnl_ratio = {
+                'long_pnl': long_pnl, 'long_pnl_ratio': modPositionInfo[i].long_pnl_ratio, 'long_pnl_ratio_percent': long_pnl_ratio_percent
+              }
+            }
           }
-          for (var i = 0; i < modifiedResult.length; i++) {
-            var short_pnl = modifiedResult[i].short_margin * modifiedResult[i].short_pnl_ratio
-            var short_pnl_ratio_percent = (Math.round(modifiedResult[i].short_pnl_ratio * 10000) / 100).toFixed(2) + '%'
-            modifiedResult[i].short_pnl_ratio = { 'short_pnl': short_pnl, 'short_pnl_ratio': modifiedResult[i].short_pnl_ratio, 'short_pnl_ratio_percent': short_pnl_ratio_percent }
-          }
-          for (var i = 0; i < modifiedResult.length; i++) {
-            var long_pnl = modifiedResult[i].long_margin * modifiedResult[i].long_pnl_ratio
-            var long_pnl_ratio_percent = (Math.round(modifiedResult[i].long_pnl_ratio * 10000) / 100).toFixed(2) + '%'
-            modifiedResult[i].long_pnl_ratio = {
-              'long_pnl': long_pnl, 'long_pnl_ratio': modifiedResult[i].long_pnl_ratio, 'long_pnl_ratio_percent': long_pnl_ratio_percent
+          //modify account info
+          if (JSON.parse(res.result)[1] !== null) {
+            // console.log(JSON.parse(res.result)[1])
+            var modAccountInfo = JSON.parse(res.result)[1]
+            for (var token in modAccountInfo) {
+              var total_margin_frozen = 0
+              for (var i = 0; i < modAccountInfo[token].contracts.length; i++) {
+                total_margin_frozen += modAccountInfo[token].contracts[i].margin_frozen
+              }
+              // if ((total_margin_frozen / modAccountInfo[token].equity * 100) >= 0.3) {
+              //   modAccountInfo[token].position_ratio = '32.16%'
+              // } else {
+              //   modAccountInfo[token].position_ratio = (total_margin_frozen / modAccountInfo[token].equity * 100).toString().substr(0, 5) + '%'
+              // }
+              modAccountInfo[token].position_ratio = (total_margin_frozen / modAccountInfo[token].equity * 100).toString().substr(0, 5) + '%'
+              modAccountInfo[token].weeklyPnL = Math.round(modAccountInfo[token].equity - modAccountInfo[token].total_avail_balance)
             }
           }
           this.setData({
-            infoContainer: [modifiedResult, this.data.infoContainer[1]]
+            infoContainer: [modPositionInfo, modAccountInfo]
           })
+          console.log(this.data.infoContainer[0])
         }
         
       },
@@ -150,7 +175,7 @@ Page({
       })
     }, 1000)
     that.getContractInfo()
-    setInterval(function () {
+    that.data.engine = setInterval(function () {
       that.getContractInfo()
     }, 12000)
   },
@@ -222,7 +247,7 @@ Page({
       hasHandled: false
     }).get({
       success: res => {
-        console.log(res.data)
+        // console.log(res.data)
         that.setData({
           adminData: res.data
         })

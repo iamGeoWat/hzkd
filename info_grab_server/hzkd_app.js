@@ -98,6 +98,12 @@ var seeThruEngine = setInterval(() => {
   console.log(infoContainer)
 }, 5000)
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 app.get('/info', (req, res) => res.send(JSON.stringify(infoContainer)))
 
 app.listen(8888, () => console.log('hzkd_app is running at port 8888.'))

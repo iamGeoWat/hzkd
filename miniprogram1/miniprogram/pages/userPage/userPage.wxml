@@ -9,8 +9,9 @@
 </i-tab-bar>
 
   <!-- 展示单子 -->
-  <block wx:for="{{infoContainer}}" wx:for-item="position" wx:key="{{position.instrument_id.token}}" wx:if="{{ currentTab === 'watch' }}">
-    <i-panel hide-border="false" title="{{position.instrument_id.token}}">
+  <text class='no_position_hint' wx:if="{{ !infoContainer[0] }}">暂无持仓</text>
+  <block wx:for="{{infoContainer[0]}}" wx:for-item="position" wx:key="{{position.instrument_id.token}}" wx:if="{{ currentTab === 'watch' }}">
+    <i-panel hide-border="false" title="{{position.instrument_id.token}} 总仓比例{{infoContainer[1][position.instrument_id.lowercaseToken].position_ratio}} 本周P&L {{infoContainer[1][position.instrument_id.lowercaseToken].weeklyPnL}}个">
     <view style='margin-top: 5px; margin-bottom: 5px' wx:if="{{position.short_qty >= 1}}">
       <i-card title='Short{{position.short_leverage}}X' extra='{{position.instrument_id.token}} {{position.instrument_id.type}}'>
       <view slot='content'>
