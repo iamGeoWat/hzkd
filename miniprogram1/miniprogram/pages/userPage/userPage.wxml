@@ -5,13 +5,13 @@
   </i-spin>
   <i-tab-bar current="{{ currentTab }}" bindchange="changeTab">
     <i-tab-bar-item key="watch" icon="createtask" current-icon="createtask_fill" title="Club 状态"></i-tab-bar-item>
-    <i-tab-bar-item key="dev" icon="warning" current-icon="warning_fill" title="开发预留地"></i-tab-bar-item>
+    <i-tab-bar-item key="account" icon="addressbook" current-icon="addressbook_fill" title="账户信息"></i-tab-bar-item>
 </i-tab-bar>
 
   <!-- 展示单子 -->
-  <text class='no_position_hint' wx:if="{{ !infoContainer[0] }}">暂无持仓</text>
+  <text class='no_position_hint' wx:if="{{ !infoContainer[0] && currentTab === 'watch' }}">暂无持仓</text>
   <block wx:for="{{infoContainer[0]}}" wx:for-item="position" wx:key="{{position.instrument_id.token}}" wx:if="{{ currentTab === 'watch' }}">
-    <i-panel hide-border="false" title="{{position.instrument_id.token}} 总仓比例{{infoContainer[1][position.instrument_id.lowercaseToken].position_ratio}} 本周P&L {{infoContainer[1][position.instrument_id.lowercaseToken].weeklyPnL}}个">
+    <i-panel hide-border="false" title="{{position.instrument_id.token}} 总仓比例{{infoContainer[1][position.instrument_id.lowercaseToken].position_ratio}}">
     <view style='margin-top: 5px; margin-bottom: 5px' wx:if="{{position.short_qty >= 1}}">
       <i-card title='Short{{position.short_leverage}}X' extra='{{position.instrument_id.token}} {{position.instrument_id.type}}'>
       <view slot='content'>
@@ -22,16 +22,16 @@
       </view>
       <view slot='footer'>
         <view>
-          <text>P&L {{position.short_pnl_ratio.short_pnl}}</text>
+          <text>P&L {{position.short_pnl_ratio.short_pnl}} 个</text>
         </view>
         <view>
-          <text>Quantity {{position.short_qty}}</text>
+          <text>Quantity {{position.short_qty}} 张</text>
         </view>
         <view>
-          <text>Available {{position.short_avail_qty}}</text>
+          <text>Available {{position.short_avail_qty}} 张</text>
         </view>
         <view>
-          <text>Value {{position.short_margin}}</text>
+          <text>Value {{position.short_margin}} 个</text>
         </view>
         <view>
           <text>Liqui {{position.short_liqui_price}}</text>
@@ -50,16 +50,16 @@
       </view>
       <view slot='footer'>
         <view>
-          <text>P&L {{position.long_pnl_ratio.long_pnl}}</text>
+          <text>P&L {{position.long_pnl_ratio.long_pnl}} 个</text>
         </view>
         <view>
-          <text>Quantity {{position.long_qty}}</text>
+          <text>Quantity {{position.long_qty}} 张</text>
         </view>
         <view>
-          <text>Available {{position.long_avail_qty}}</text>
+          <text>Available {{position.long_avail_qty}} 张</text>
         </view>
         <view>
-          <text>Value {{position.long_margin}}</text>
+          <text>Value {{position.long_margin}} 个</text>
         </view>
         <view>
           <text>Liqui {{position.long_liqui_price}}</text>
@@ -67,6 +67,13 @@
       </view>
       </i-card>
     </view>
+    </i-panel>
+  </block>
+
+  <block wx:if="{{ currentTab === 'account' }}">
+    <i-panel>
+      <i-cell title="账户余额" label="EOS" value="{{ infoContainer[1]['eos'].equity }} EOS"></i-cell>
+      <i-cell title="本周P&L" label="EOS" value="{{ infoContainer[1]['eos'].contracts[1].realized_pnl }} EOS"></i-cell>
     </i-panel>
   </block>
 </view>
