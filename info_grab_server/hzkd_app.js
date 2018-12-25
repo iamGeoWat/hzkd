@@ -20,7 +20,6 @@ const express = require('express')
 const app = express()
 
 var infoContainer = [{}, {}]
-var historyContainer = ''
 
 var positionEngine = setInterval(() => {
   var timestamp = new Date();
@@ -95,58 +94,11 @@ var accountEngine = setInterval(() => {
   accountInfoGrabber.end()
 }, 10000)
 
-var orderEngine = setInterval(() => {
-  if (JSON.stringify(infoContainer[1]) !== '{}') {
-    var instrument_id = infoContainer[1]['eos'].contracts[1].instrument_id
-    var timestamp = new Date();
-    timestamp.setHours(timestamp.getHours(), timestamp.getMinutes());
-    var accountSign = CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256(timestamp.toISOString() + 'GET' + '/api/futures/v3/orders/' + instrument_id + '?status=2', sec_key))
-    const orderOpt = {
-      host: 'www.okex.com',
-      path: '/api/futures/v3/orders/' + instrument_id + '?status=2',
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'OK-ACCESS-KEY': api_key,
-        'OK-ACCESS-SIGN': accountSign,
-        'OK-ACCESS-PASSPHRASE': passphrase,
-        'OK-ACCESS-TIMESTAMP': timestamp.toISOString()
-      }
-    }
-  
-    const orderGrabber = https.request(orderOpt, (res) => {
-      var dataArr = []
-      var dataArrLen = 0
-      res.on('data', (d) => {
-        dataArr.push(d)
-        dataArrLen += d.length
-      })
-      res.on('end', () => {
-        if (JSON.parse(Buffer.concat(dataArr, dataArrLen).toString())) {
-          historyContainer = JSON.parse(Buffer.concat(dataArr, dataArrLen).toString())
-        }
-        console.log(historyContainer)
-      })
-    })
-    orderGrabber.on('error', (e) => {
-      console.error(e);
-    });
-    orderGrabber.end()
-  }
-}, 5000)
 
 var seeThruEngine = setInterval(() => {
   // console.log(infoContainer[1])
 }, 5000)
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
-
 app.get('/info', (req, res) => res.send(JSON.stringify(infoContainer)))
-
-app.get('/history', (req, res) => res.send(JSON.stringify(historyContainer)))
 
 app.listen(8888, () => console.log('hzkd_app is running at port 8888.'))

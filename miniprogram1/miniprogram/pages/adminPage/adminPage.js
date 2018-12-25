@@ -157,7 +157,7 @@ Page({
           this.setData({
             infoContainer: [modPositionInfo, modAccountInfo]
           })
-          console.log(this.data.infoContainer[0])
+          console.log(this.data.infoContainer)
         }
         
       },
