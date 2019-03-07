@@ -52,6 +52,10 @@ Page({
               wx.redirectTo({
                 url: '../touristPage/touristPage?openid=' + that.data.openid
               })
+            } else if (res === 'client') {
+              wx.redirectTo({
+                url: '../clientPage/clientPage?openid=' + that.data.openid
+              })
             }
           })
       }
@@ -117,6 +121,9 @@ Page({
           } else if (res.data[0].type === 'normal') {
             console.log('Normal', res)
             resolve('normal')
+          } else if (res.data[0].type === 'client') {
+            console.log('Client', res)
+            resolve('client')
           }
         },
         fail: err => {

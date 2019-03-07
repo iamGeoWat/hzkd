@@ -11,10 +11,10 @@ const CryptoJS = require('crypto-js')
 // const passphrase = '515162'
 // Yu
 
-const api_key = '3414ef69-78c3-4c8d-a723-86e0fd51c02b'
-const sec_key = 'D7034EC4A3F7290CBE77D0269231699F'
-const passphrase = '1993612dj'
-// Huang
+const api_key = 'fbac5fed-2810-460f-af79-4b5e993d35ce'
+const sec_key = 'C8676811F35709FB839B03E4F8E1FFB8'
+const passphrase = 'dalongyu'
+// Client
 
 const express = require('express')
 const app = express()
@@ -92,7 +92,7 @@ var accountEngine = setInterval(() => {
     console.error(e);
   });
   accountInfoGrabber.end()
-}, 10000)
+}, 100000)
 
 
 var seeThruEngine = setInterval(() => {
